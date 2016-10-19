@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ruleset name="WideM2">
+    <description>Magento 2 Wide Coding Standard</description>
+    <rule ref="EcgM2"/>
+
+    <!-- Comments -->
+    <rule ref="Squiz.Commenting">
+        <exclude name="Squiz.Commenting.ClassComment.TagNotAllowed"/>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+        <exclude name="Squiz.Commenting.ClosingDeclarationComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="Squiz.Commenting.BlockComment.SingleLine"/>
+    </rule>
+
+    <!-- Include commenting sniffs -->
+    <rule ref="Generic.Commenting"/>
+    <rule ref="PEAR.Commenting">
+        <exclude name="PEAR.Commenting.ClassComment"/>
+        <exclude name="PEAR.Commenting.FileComment"/>
+        <exclude name="PEAR.Commenting.FunctionComment"/>
+    </rule>
+
+    <!-- Exclude some metrics sniffs -->
+    <rule ref="Generic.Metrics">
+        <exclude name="Generic.Metrics.CyclomaticComplexity"/>
+        <exclude name="Generic.Metrics.NestingLevel"/>
+    </rule>
+
+    <!-- Lines can be 130 chars long, but never show errors -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="130"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Use Unix newlines -->
+    <rule ref="Generic.Files.LineEndings">
+        <properties>
+            <property name="eolChar" value="\n"/>
+        </properties>
+    </rule>
+
+    <!-- Have 8 chars padding maximum and always show as errors -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="maxPadding" value="8"/>
+            <property name="ignoreMultiLine" value="true"/>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- We don't want gsjlint throwing errors for things we already check -->
+    <rule ref="Generic.Debug.ClosureLinter">
+        <properties>
+            <property name="errorCodes" type="array" value="0210"/>
+            <property name="ignoreCodes" type="array" value="0001,0110,0240"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Debug.ClosureLinter.ExternalToolError">
+        <message>%2$s</message>
+    </rule>
+
+    <rule def="PEAR.Functions">
+        <exclude name="PEAR.Functions.FunctionCallSignature"/>
+    </rule>
+
+    <!-- Only one argument per line in multi-line function calls -->
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <properties>
+            <property name="allowMultipleArguments" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Mute some errors -->
+    <rule ref="Generic.Commenting.DocComment.TagValueIndent">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature.Indent">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment.Incorrect">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSame">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Commenting.FunctionComment.WrongStyle">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Commenting.ClassComment.Missing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.ClassComment.Missing">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.ClassComment.SpacingAfter">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.ClassComment.TagNotAllowed">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PEAR.Commenting.FunctionComment.SpacingAfterParamType">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamType">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.NonParamGroup">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.InlineComment.InvalidEndChar">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.LongConditionClosingComment.Missing">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Mute some errors don't properly working with inline "/** @var */" declarations -->
+    <rule ref="Generic.Commenting.DocComment.ContentAfterOpen">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.ContentBeforeClose">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.MissingShort">
+        <severity>0</severity>
+    </rule>
+</ruleset>

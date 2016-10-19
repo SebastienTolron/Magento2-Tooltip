@@ -1,0 +1,56 @@
+version: '2'
+
+services:
+  application_project:
+    container_name: project_app
+    image: docker.tolron.fr:5000/hackman/code
+    environment:
+        - PROJECT_PATH = /var/www/project
+    volumes:
+        - /var/www/project:/var/www/project
+    tty: true
+    network_mode: "bridge"
+  db:
+    container_name: project_db
+    image: mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: project
+        MYSQL_USER: project
+        MYSQL_PASSWORD: project
+    volumes:
+        - "/vara/lib/mysql:/var/lib/mysql:rw"
+    network_mode: "bridge"
+
+  php:
+    container_name: project_php
+    image: docker.tolron.fr:5000/hackman/php7.0.8
+    ports:
+        - 9000:9000
+    volumes_from:
+        - application_project
+    links:
+        - db
+        - redis_project
+    network_mode: "bridge"
+
+  redis_project:
+    container_name: project_redis
+    image: docker.tolron.fr:5000/hackman/redis
+    ports:
+        - 6379:6379
+    network_mode: "bridge"
+
+  webserver_project:
+    container_name: project_webserver
+    image: docker.tolron.fr:5000/hackman/nginx
+    links:
+        - php
+        - db
+        - redis_project
+    volumes_from:
+        - application_project
+    volumes:
+        - /var/www/project/docker/conf/nginx/sites-enabled:/etc/nginx/sites-enabled
+        - /var/www/empty:/etc/nginx/sites-available
+    network_mode: "bridge"
