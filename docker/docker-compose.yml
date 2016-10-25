@@ -1,56 +1,75 @@
 version: '2'
-
 services:
-  application_project:
+  application:
     container_name: project_app
     image: docker.tolron.fr:5000/hackman/code
     environment:
-        - PROJECT_PATH = /var/www/project
+        - project_PATH = /var/www/project
     volumes:
         - /var/www/project:/var/www/project
     tty: true
     network_mode: "bridge"
+    restart: always
   db:
     container_name: project_db
     image: mysql
+    ports:
+        - 3306:3306
     environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: project
         MYSQL_USER: project
         MYSQL_PASSWORD: project
     volumes:
-        - "/vara/lib/mysql:/var/lib/mysql:rw"
+        - "/var/lib/mysql/docker:/var/lib/mysql:rw"
     network_mode: "bridge"
+    restart: always
 
   php:
     container_name: project_php
-    image: docker.tolron.fr:5000/hackman/php7.0.8
-    ports:
-        - 9000:9000
+    image: docker.tolron.fr:5000/hackman/php7.0.8-xdebug
     volumes_from:
-        - application_project
+        - application
+    volumes:
+        - /var/www/project/docker/conf/php/conf.d:/usr/local/etc/php/conf.d
     links:
         - db
-        - redis_project
+        - redis
     network_mode: "bridge"
+    restart: always
 
-  redis_project:
+  redis:
     container_name: project_redis
     image: docker.tolron.fr:5000/hackman/redis
-    ports:
-        - 6379:6379
     network_mode: "bridge"
+    restart: always
 
-  webserver_project:
+  grunt:
+    container_name: project_grunt
+    image: docker.tolron.fr:5000/hackman/grunt-magento
+    network_mode: "bridge"
+    entrypoint:
+        - /docker-entrypoint.sh
+        - themeProject
+    volumes:
+        - /var/www/project:/app
+    links:
+        - redis
+        - db
+
+  webserver:
     container_name: project_webserver
     image: docker.tolron.fr:5000/hackman/nginx
     links:
         - php
         - db
-        - redis_project
+        - redis
     volumes_from:
-        - application_project
+        - application
     volumes:
         - /var/www/project/docker/conf/nginx/sites-enabled:/etc/nginx/sites-enabled
         - /var/www/empty:/etc/nginx/sites-available
     network_mode: "bridge"
+    environment:
+        VIRTUAL_HOST: project.local
+    restart: always
